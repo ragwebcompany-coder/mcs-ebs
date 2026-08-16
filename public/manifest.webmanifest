@@ -1,0 +1,15 @@
+{
+  "name": "ΠΜΣ Οικονομική & Επιχειρησιακή Στρατηγική — Πανεπιστήμιο Πειραιώς",
+  "short_name": "MSc EBS",
+  "description": "Υβριδικό μεταπτυχιακό στην Οικονομική & Επιχειρησιακή Στρατηγική, Τμήμα Οικονομικής Επιστήμης, Πανεπιστήμιο Πειραιώς.",
+  "start_url": "/el",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#05121f",
+  "theme_color": "#05121f",
+  "lang": "el-GR",
+  "categories": ["education"],
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

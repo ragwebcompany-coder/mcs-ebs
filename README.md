@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ΠΜΣ «Οικονομική & Επιχειρησιακή Στρατηγική» — msc-ebs.gr
 
-## Getting Started
+Δίγλωσσο (EL/EN) στατικό site για το Πρόγραμμα Μεταπτυχιακών Σπουδών
+«Οικονομική & Επιχειρησιακή Στρατηγική» του Τμήματος Οικονομικής Επιστήμης,
+Πανεπιστήμιο Πειραιώς.
 
-First, run the development server:
+Next.js 16 · React 19 · TypeScript · Tailwind CSS 4 · 138 στατικές σελίδες.
+
+---
+
+## Γρήγορη εκκίνηση
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000  → ανακατευθύνει στο /el
+npm run build    # παράγει και τις 138 σελίδες
+npm start        # σερβίρει το production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Πώς ενημερώνεται το περιεχόμενο
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Όλο το περιεχόμενο ζει σε τυποποιημένα αρχεία στο `src/content/`. **Δεν χρειάζεται
+να αγγίξεις καμία σελίδα** — οι σελίδες, το sitemap, τα structured data και τα
+`llms.txt` παράγονται αυτόματα από αυτά τα αρχεία.
 
-## Learn More
+| Αρχείο | Τι περιέχει |
+| --- | --- |
+| `site.ts` | Δίδακτρα, εξάμηνα, ECTS, τηλέφωνα, διευθύνσεις, σύνδεσμοι PDF, ποσοστά αποφοίτων |
+| `courses.ts` | Και τα 20 μαθήματα: τίτλοι, slugs, ECTS, διδάσκοντες, περιγραφές, θεματικές, μαθησιακά αποτελέσματα |
+| `faculty.ts` | Οι 18 διδάσκοντες: ονόματα, βαθμίδες, γνωστικά αντικείμενα, στοιχεία επικοινωνίας |
+| `announcements.ts` | Ανακοινώσεις — **πρόσθεσε νέα στην κορυφή του πίνακα** |
+| `programme.ts` | Εκδρομές, σεμινάρια, βήματα αίτησης, κριτήρια επιλογής |
+| `partners.ts` | Συνεργαζόμενοι εργοδότες πρακτικής, χορηγοί |
+| `faq.ts` | Οι 20 ερωτήσεις/απαντήσεις |
 
-To learn more about Next.js, take a look at the following resources:
+Κάθε πεδίο έχει μορφή `{ el: "…", en: "…" }`. Αν προσθέσεις μάθημα ή ανακοίνωση,
+γράψε **και τις δύο γλώσσες** — ο TypeScript θα σε σταματήσει αν ξεχάσεις.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Παράδειγμα: νέα ανακοίνωση
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Πρόσθεσε στην κορυφή του `announcements` στο `src/content/announcements.ts`:
 
-## Deploy on Vercel
+```ts
+{
+  id: "prokiriksi-2027",
+  slug: { el: "prokiriksi-2027", en: "call-for-applications-2027" },
+  date: "2026-09-01",
+  category: "admissions",
+  title: { el: "Προκήρυξη 2027", en: "Call for applications 2027" },
+  summary: { el: "…", en: "…" },
+  body: { el: ["Παράγραφος 1", "Παράγραφος 2"], en: ["…"] },
+},
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Η σελίδα, το sitemap, το RSS-ready JSON-LD και το `llms-full.txt` ενημερώνονται μόνα τους.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## SEO
+
+- **Per-page metadata**: μοναδικός τίτλος και description σε κάθε μία από τις 138 σελίδες.
+- **Canonical + hreflang**: πλήρες cluster `el-GR` / `en-GB` / `x-default` σε κάθε σελίδα,
+  παραγόμενο μηχανικά από το `src/lib/seo.ts` ώστε να μην ξεφύγει ποτέ.
+- **Structured data**: συνδεδεμένο `@graph` ανά σελίδα (`src/lib/schema.ts`) —
+  `CollegeOrUniversity` → `EducationalOrganization` → `EducationalOccupationalProgram`,
+  με `Course` + `CourseInstance` για κάθε μάθημα (υποψήφιο για Google Course rich results),
+  `Person` για κάθε διδάσκοντα, `FAQPage`, `HowTo` στις αιτήσεις, `BreadcrumbList`,
+  `Offer` με τα δίδακτρα, `Dataset` για τα ποσοστά αποφοίτων.
+- **Sitemap**: 130 URLs με `lastmod`, προτεραιότητες και `xhtml:link` alternates.
+- **Τοπικοποιημένα slugs** στα μαθήματα, τους διδάσκοντες και τις ανακοινώσεις
+  (`/el/courses/stratigiki-ton-epicheiriseon` ↔ `/en/courses/business-strategy`).
+- **301 redirects** από όλα τα παλιά WordPress URLs (`next.config.ts`) ώστε να μη χαθεί
+  η συσσωρευμένη αυθεντία του domain.
+
+## GEO — Generative Engine Optimization
+
+Το κομμάτι που δεν κάνει σχεδόν κανείς στην Ελλάδα:
+
+- **`/llms.txt`** — συνοπτικός χάρτης του site κατά το πρότυπο llms.txt, με όλα τα
+  σκληρά δεδομένα (δίδακτρα, διάρκεια, ECTS, επικοινωνία) δηλωμένα μία φορά και ρητά.
+- **`/llms-full.txt`** — ολόκληρο το site ως Markdown, και στις δύο γλώσσες (~132 KB).
+  Ένα answer engine παίρνει τα πάντα με ένα request.
+- **`robots.txt` με ρητά ονομασμένους crawlers** — GPTBot, OAI-SearchBot, ClaudeBot,
+  PerplexityBot, Google-Extended, Applebot-Extended κ.ά. Η πρόσβασή τους είναι
+  συνειδητή απόφαση, όχι παρενέργεια του wildcard.
+- **Answer-first αρχιτεκτονική**: κάθε σελίδα ανοίγει με μία αυτοτελή, παραθέσιμη
+  πρόταση κάτω από τον H1 (το `answer` prop του `PageHeader`) — ακριβώς η μορφή που
+  εξάγουν τα γλωσσικά μοντέλα.
+- **Πίνακες με σκληρά δεδομένα** (δίδακτρα, ποσοστά αποφοίτων) — τα μοντέλα
+  παραθέτουν πίνακες με πολύ μεγαλύτερη ακρίβεια από πρόζα.
+- **20 ερωτήσεις σε σχήμα ερωτήματος** με `FAQPage` schema.
+
+---
+
+## Design
+
+Η κατεύθυνση λέγεται **«Portolan»**. Ο Πειραιάς είναι λιμάνι· η στρατηγική είναι
+πλοήγηση. Το δομικό λεξιλόγιο έρχεται από τους μεσογειακούς ναυτικούς χάρτες:
+ακτίνες ρόμβων από σταθερό σημείο, ισοβαθείς καμπύλες (το ίδιο σχήμα με τις
+καμπύλες αδιαφορίας των οικονομικών), σημεία βυθομέτρησης ως δεδομένα.
+
+- **Χρώματα**: βαθύ navy Πειραιώς + ορείχαλκος, από το ίδιο το λογότυπο του ΠΜΣ.
+  Το θεσμικό κόκκινο εμφανίζεται **μόνο** ως σήμα θέσης, ποτέ ως διακόσμηση.
+- **Τυπογραφία**: Literata (display) / Commissioner (κείμενο) / JetBrains Mono
+  (δεδομένα και annotations). Και τα τρία με πλήρη ελληνική υποστήριξη — αυτό ήταν
+  ο δεσμευτικός περιορισμός στην επιλογή.
+- **Signature**: ο ζωντανός portolan χάρτης στο hero, όπου τα τέσσερα εξάμηνα είναι
+  σταθμοί πάνω σε χαραγμένη πορεία (`src/components/Portolan.tsx`).
+- Responsive έως 390px, ορατό keyboard focus, `prefers-reduced-motion` σεβαστό,
+  print stylesheet.
+
+---
+
+## ⚠️ Χρειάζονται επιβεβαίωση πριν το go-live
+
+Τα παρακάτω τα συμπλήρωσα με τη λογική παραδοχή, επειδή **δεν δημοσιεύονται στο
+υπάρχον site**. Χρειάζονται έλεγχο από τη Γραμματεία:
+
+1. **ECTS ανά μάθημα** (`site.ts` → `facts.ectsPerCourse`, και το `ects` κάθε μαθήματος
+   στο `courses.ts`). Χρησιμοποίησα 7,5 ECTS × 12 μαθήματα + 30 ECTS διπλωματική = 120,
+   που είναι το τυπικό σχήμα για τετραεξαμηνιαίο ΠΜΣ. **Διασταύρωσε με τον ΦΕΚ κανονισμό.**
+
+2. **Πλήρη ονόματα τριών διδασκόντων.** Το υπάρχον site δίνει μόνο αρχικά, οπότε τα
+   κράτησα ως έχουν αντί να τα εφεύρω: «Π. Χρονόπουλος», «Ι. Κοκορέ», «Χ. Αγκυρόπουλος»
+   (`faculty.ts`). Ίδιο για τις βαθμίδες τους, που δεν αναφέρονται πουθενά.
+
+3. **Περιγραφές μαθημάτων.** Τα `summary`, `body`, `topics` και `outcomes` κάθε μαθήματος
+   τα έγραψα αναπτύσσοντας τις υπάρχουσες σύντομες περιλήψεις και τους τίτλους των
+   syllabi. Είναι ακαδημαϊκά εύλογα αλλά **δεν είναι αντιγραμμένα από τα επίσημα
+   περιγράμματα** — αξίζει μια ανάγνωση από τους διδάσκοντες.
+
+4. **Ημερομηνίες προκήρυξης.** Δεν υπάρχει ενεργή προθεσμία αιτήσεων στο υλικό που
+   βρήκα. Όταν ανακοινωθεί, πρόσθεσέ την ως ανακοίνωση και στο `site.ts`.
+
+5. **Ηλεκτρονική αίτηση.** Το κουμπί «Ηλεκτρονική αίτηση» δείχνει προς την υπάρχουσα
+   φόρμα στο `msc-ebs.gr/apply-2/`. Αν θέλουμε native φόρμα, είναι ξεχωριστή δουλειά
+   (χρειάζεται backend και χειρισμό προσωπικών δεδομένων / GDPR).
+
+Επίσης: τα PDF (κανονισμός, πολιτική ποιότητας, έντυπα) εξακολουθούν να σερβίρονται
+από το `wp-content` του παλιού site. Πριν κατεβάσουμε το WordPress, πρέπει να
+μεταφερθούν στο `public/` και να ενημερωθούν τα paths στο `site.ts`.
+
+---
+
+## Deploy
+
+Είναι πλήρως στατικό. Το πιο απλό είναι Vercel (μηδέν config) ή Netlify.
+
+Για κλασικό hosting/cPanel, πρόσθεσε `output: "export"` στο `next.config.ts` και
+ανέβασε τον φάκελο `out/` — σημείωση: με `output: "export"` τα redirects του
+`next.config.ts` δεν εφαρμόζονται, οπότε τα 301 πρέπει να μπουν σε `.htaccess`.
+
+Πριν το go-live: επιβεβαίωσε ότι το `site.url` στο `src/content/site.ts` δείχνει στο
+τελικό domain — από εκεί παράγονται όλα τα canonical, τα hreflang και το sitemap.

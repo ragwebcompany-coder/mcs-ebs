@@ -1,26 +1,296 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  MSc EBS — "Portolan"
+  --------------------------------------------------------------------------
+  Piraeus is a port; strategy is navigation. The structural vocabulary comes
+  from Mediterranean portolan charts: rhumb lines radiating from a fixed point,
+  isobath contours (the same shape as an economist's indifference curve), and
+  sounding figures standing in for data. Institutional navy and brass carry the
+  University of Piraeus identity; the institutional red appears only as an
+  overprint signal — position, deadline, current state — never as decoration.
+*/
+
+@theme {
+  /* ---- Depth: the navy ground -------------------------------------- */
+  --color-abyss: #05121f;
+  --color-deep: #08203a;
+  --color-hull: #0e3358;
+  --color-piraeus: #1b5c93;
+  --color-shallow: #4d8ab8;
+
+  /* ---- Brass: authority, structure, numerals ------------------------ */
+  --color-brass: #c4972f;
+  --color-brass-lit: #e3be72;
+  --color-brass-pale: #f0dcaa;
+
+  /* ---- Signal: overprint only -------------------------------------- */
+  --color-signal: #d22b45;
+
+  /* ---- Chart tints: the light ground ------------------------------- */
+  --color-shoal: #dce8ea;
+  --color-foam: #eff4f4;
+  --color-bone: #f7f9f8;
+
+  /* ---- Type on ground ---------------------------------------------- */
+  --color-lume: #e8eef3;
+  --color-lume-dim: #9db3c4;
+  --color-lume-faint: #64809a;
+
+  /* ---- Typefaces ---------------------------------------------------- */
+  --font-display: var(--font-literata), "Literata", Georgia, serif;
+  --font-sans: var(--font-commissioner), "Commissioner", system-ui, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+
+  /* ---- Rhythm -------------------------------------------------------- */
+  --spacing-gutter: 1.5rem;
+  --text-hero: clamp(2.75rem, 1.2rem + 6.4vw, 7rem);
+  --text-display: clamp(2rem, 1.1rem + 3.6vw, 4rem);
+  --text-title: clamp(1.55rem, 1.1rem + 1.8vw, 2.5rem);
+  --text-lede: clamp(1.0625rem, 0.98rem + 0.42vw, 1.3125rem);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ---------------------------------------------------------------------- */
+/* Base                                                                    */
+/* ---------------------------------------------------------------------- */
+
+* {
+  min-width: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* The sticky masthead is 4.5rem; keep anchored headings clear of it. */
+  scroll-padding-top: 6rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-abyss);
+  color: var(--color-lume);
+  font-family: var(--font-sans);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+  overflow-x: clip;
+}
+
+::selection {
+  background-color: var(--color-brass);
+  color: var(--color-abyss);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brass-lit);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Greek and Latin sit at different optical weights in Literata; the display
+   face is always set tight and large, so nudge tracking back in negative. */
+.font-display,
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Chart grammar                                                           */
+/* ---------------------------------------------------------------------- */
+
+/* An eyebrow is a chart annotation: mono, spaced, small, never decorative. */
+@utility annot {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* A sounding is a plotted depth figure — used for real numbers only. */
+@utility sounding {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* Hairline rules, the weight of an engraved chart line. */
+@utility rule-chart {
+  border-color: color-mix(in oklab, var(--color-piraeus) 42%, transparent);
+}
+
+/* The isobath field: concentric contours, the page's ambient texture. */
+@utility isobath {
+  background-image: repeating-radial-gradient(
+    circle at var(--isobath-x, 50%) var(--isobath-y, 50%),
+    transparent 0,
+    transparent 46px,
+    color-mix(in oklab, var(--color-piraeus) 26%, transparent) 46px,
+    color-mix(in oklab, var(--color-piraeus) 26%, transparent) 47px
+  );
+}
+
+@utility isobath-light {
+  background-image: repeating-radial-gradient(
+    circle at var(--isobath-x, 50%) var(--isobath-y, 50%),
+    transparent 0,
+    transparent 46px,
+    color-mix(in oklab, var(--color-piraeus) 16%, transparent) 46px,
+    color-mix(in oklab, var(--color-piraeus) 16%, transparent) 47px
+  );
+}
+
+/* Sounding grid: the faint lat/long lattice behind dark sections. */
+@utility latticed {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-piraeus) 20%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-piraeus) 20%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 72px 72px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Link underline that draws itself, like a course line being plotted      */
+/* ---------------------------------------------------------------------- */
+
+@utility link-plot {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Entrance choreography — one orchestrated sequence, not scattered fades  */
+/* ---------------------------------------------------------------------- */
+
+@keyframes plot-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes draw-line {
+  from {
+    stroke-dashoffset: var(--dash, 1200);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fix-position {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.plot-in {
+  animation: plot-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.draw-line {
+  stroke-dasharray: var(--dash, 1200);
+  animation: draw-line 2.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.fix-position {
+  animation: fix-position 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+/* Reveal on scroll — set by an IntersectionObserver in ScrollReveal. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--delay, 0ms);
+}
+
+[data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .draw-line {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Print — a programme page is something people actually print             */
+/* ---------------------------------------------------------------------- */
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  header,
+  footer,
+  nav,
+  [data-print="hide"] {
+    display: none !important;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.75em;
+  }
 }
