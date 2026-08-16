@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
@@ -9,6 +10,7 @@ import { href, locales, type Locale } from "@/lib/i18n";
 const copy = {
   el: {
     apply: "Αίτηση",
+    applyNow: "Κάνε αίτηση τώρα",
     menu: "Μενού",
     close: "Κλείσιμο",
     skip: "Μετάβαση στο περιεχόμενο",
@@ -19,6 +21,7 @@ const copy = {
   },
   en: {
     apply: "Apply",
+    applyNow: "Apply now",
     menu: "Menu",
     close: "Close",
     skip: "Skip to content",
@@ -108,17 +111,22 @@ export function Masthead({ locale }: { locale: Locale }) {
             <Link
               href={href(locale, "home")}
               onClick={closeMenus}
-              className="group flex shrink-0 items-center gap-3.5"
+              className="group flex min-w-0 shrink-0 items-center gap-3.5"
             >
               <span
                 aria-hidden="true"
-                className="grid size-9 shrink-0 place-items-center border border-brass/50 transition-colors duration-300 group-hover:border-brass"
+                className="relative grid h-12 w-10 shrink-0 place-items-center overflow-hidden border border-brass/35 bg-abyss/60 p-1 shadow-[0_0_30px_-16px_rgba(227,190,114,0.9)] transition-colors duration-300 group-hover:border-brass"
               >
-                <span className="sounding text-[0.65rem] font-bold text-brass">
-                  ΟΕΣ
-                </span>
+                <Image
+                  src="/media/brand/ebs-logo-mark.png"
+                  alt=""
+                  width={40}
+                  height={48}
+                  priority
+                  className="h-full w-auto object-contain"
+                />
               </span>
-              <span className="hidden leading-none sm:block">
+              <span className="hidden min-w-0 leading-none sm:block">
                 <span className="annot block text-[0.58rem] text-lume-faint">
                   {t.brandTop}
                 </span>
@@ -189,9 +197,11 @@ export function Masthead({ locale }: { locale: Locale }) {
               <Link
                 href={href(locale, "admissions")}
                 onClick={closeMenus}
-                className="hidden bg-brass px-5 py-2.5 text-sm font-semibold text-abyss transition-colors duration-300 hover:bg-brass-lit sm:inline-block"
+                className="hidden border border-brass-lit/40 bg-brass px-5 py-2.5 text-sm font-semibold text-abyss shadow-[0_0_30px_-12px_rgba(227,190,114,0.85)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-brass-lit sm:inline-flex sm:items-center sm:gap-2"
               >
-                {t.apply}
+                <span className="hidden xl:inline">{t.applyNow}</span>
+                <span className="xl:hidden">{t.apply}</span>
+                <span aria-hidden="true">→</span>
               </Link>
 
               <button
@@ -284,9 +294,9 @@ export function Masthead({ locale }: { locale: Locale }) {
             <Link
               href={href(locale, "admissions")}
               onClick={closeMenus}
-              className="flex-1 bg-brass px-5 py-3.5 text-center text-sm font-semibold text-abyss"
+              className="flex-1 border border-brass-lit/40 bg-brass px-5 py-3.5 text-center text-sm font-semibold text-abyss shadow-[0_0_30px_-14px_rgba(227,190,114,0.9)]"
             >
-              {t.apply}
+              {t.applyNow}
             </Link>
             <div className="flex items-center gap-1">
               {locales.map((option) => (

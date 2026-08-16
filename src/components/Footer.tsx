@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/content/site";
 import { navigation } from "@/lib/nav";
@@ -55,10 +56,23 @@ export function Footer({ locale }: { locale: Locale }) {
         <div className="grid gap-14 lg:grid-cols-12">
           {/* Identity + contact */}
           <div className="lg:col-span-4">
-            <p className="annot text-brass">{t.university}</p>
-            <p className="mt-4 max-w-xs font-display text-2xl leading-tight font-semibold text-lume">
-              {site.name[locale]}
-            </p>
+            <div className="flex items-start gap-4">
+              <div className="relative h-16 w-13 shrink-0 border border-brass/35 bg-abyss/60 p-1.5">
+                <Image
+                  src="/media/brand/ebs-logo-mark.png"
+                  alt=""
+                  width={52}
+                  height={62}
+                  className="h-full w-auto object-contain"
+                />
+              </div>
+              <div>
+                <p className="annot text-brass">{t.university}</p>
+                <p className="mt-4 max-w-xs font-display text-2xl leading-tight font-semibold text-lume">
+                  {site.name[locale]}
+                </p>
+              </div>
+            </div>
 
             <address className="mt-8 space-y-1.5 text-sm leading-relaxed text-lume-dim not-italic">
               <p className="font-medium text-lume">{t.secretariat}</p>

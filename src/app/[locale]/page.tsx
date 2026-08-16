@@ -38,6 +38,9 @@ const copy = {
     lede: "Υβριδικό μεταπτυχιακό δύο ετών που γεφυρώνει την οικονομική ανάλυση με τη στρατηγική απόφαση. Δώδεκα μαθήματα, διπλωματική εργασία και προαιρετική πρακτική άσκηση σε πάνω από 40 συνεργαζόμενες επιχειρήσεις.",
     ctaPrimary: "Κάνε αίτηση",
     ctaSecondary: "Δες τα μαθήματα",
+    applyStripTitle: "Η αίτηση γίνεται ηλεκτρονικά",
+    applyStripBody:
+      "Δες τα βήματα, τα δικαιολογητικά και τα στοιχεία επικοινωνίας της Γραμματείας πριν την υποβολή.",
     factsAnnot: "Το πρόγραμμα σε αριθμούς",
     facts: [
       { v: "4", l: "εξάμηνα φοίτησης", n: "3 διδακτικά + 1 διπλωματική" },
@@ -95,6 +98,9 @@ const copy = {
     lede: "A two-year hybrid master's bridging economic analysis and the strategic decision. Twelve courses, a dissertation and an optional internship across more than 40 partner employers.",
     ctaPrimary: "Apply now",
     ctaSecondary: "See the courses",
+    applyStripTitle: "Applications are submitted online",
+    applyStripBody:
+      "Review the steps, required documents and Secretariat contact details before submission.",
     factsAnnot: "The programme in figures",
     facts: [
       { v: "4", l: "semesters", n: "3 taught + 1 dissertation" },
@@ -241,6 +247,25 @@ export default async function HomePage({
               {t.ctaSecondary}
             </ButtonLink>
           </div>
+
+          <Link
+            href={href(l, "admissions")}
+            className="plot-in group mt-8 grid max-w-2xl gap-3 border border-brass/45 bg-deep/70 p-5 shadow-[0_0_60px_-35px_rgba(227,190,114,0.9)] backdrop-blur-sm transition-all duration-300 hover:border-brass hover:bg-deep sm:grid-cols-[1fr_auto] sm:items-center"
+            style={{ "--delay": "740ms" } as React.CSSProperties}
+          >
+            <span>
+              <span className="annot text-brass">{t.applyStripTitle}</span>
+              <span className="mt-2 block text-sm leading-relaxed text-lume-dim">
+                {t.applyStripBody}
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              className="grid size-11 place-items-center border border-brass/55 text-xl text-brass transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </Link>
 
           {/* Plotted figures */}
           <div

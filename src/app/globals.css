@@ -218,6 +218,37 @@ p {
   }
 }
 
+@keyframes loader-out {
+  0%,
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes loader-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes loader-scan {
+  from {
+    transform: rotate(0deg) scale(0.96);
+  }
+  to {
+    transform: rotate(42deg) scale(1.04);
+  }
+}
+
 .plot-in {
   animation: plot-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--delay, 0ms);
@@ -232,6 +263,37 @@ p {
 .fix-position {
   animation: fix-position 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   animation-delay: var(--delay, 0ms);
+}
+
+.site-loader {
+  animation: loader-out 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.loader-logo {
+  animation: loader-logo-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.loader-halo {
+  box-shadow:
+    0 0 42px -14px color-mix(in oklab, var(--color-brass-lit) 75%, transparent),
+    inset 0 0 30px -18px color-mix(in oklab, var(--color-brass-lit) 80%, transparent);
+  animation: loader-scan 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.loader-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-piraeus) 24%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-piraeus) 24%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle, #000 0 42%, transparent 70%);
 }
 
 /* Reveal on scroll — set by an IntersectionObserver in ScrollReveal. */
@@ -269,6 +331,12 @@ p {
 
   .draw-line {
     stroke-dashoffset: 0;
+  }
+
+  .site-loader,
+  .loader-logo,
+  .loader-halo {
+    animation: none !important;
   }
 }
 

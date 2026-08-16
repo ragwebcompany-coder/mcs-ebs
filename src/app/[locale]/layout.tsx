@@ -5,6 +5,8 @@ import "../globals.css";
 
 import { Masthead } from "@/components/Masthead";
 import { Footer } from "@/components/Footer";
+import { SiteLoader } from "@/components/SiteLoader";
+import { ApplyDock } from "@/components/ApplyDock";
 import { JsonLd } from "@/components/JsonLd";
 import { site } from "@/content/site";
 import { htmlLang, locales, type Locale } from "@/lib/i18n";
@@ -123,7 +125,9 @@ export default async function LocaleLayout({
           )}
         />
 
+        <SiteLoader locale={typed} />
         <Masthead locale={typed} />
+        <ApplyDock locale={typed} />
         <main id="main">{children}</main>
         <Footer locale={typed} />
       </body>
